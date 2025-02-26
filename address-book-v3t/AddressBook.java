@@ -53,10 +53,14 @@ public class AddressBook
      * Add a new set of details to the address book.
      * @param details The details to associate with the person.
      */
-    public void addDetails(ContactDetails details)
+    public void addDetails(ContactDetails details) throws DuplicateKeyException
     {
+        DuplicateKeyException e = new Exception;
         if(details == null) {
             throw new IllegalArgumentException("Null details passed to addDetails.");
+        }
+        else if(book.containsKey(details.getName())) {
+            throw DuplicateKeyException(details.getName());
         }
         book.put(details.getName(), details);
         book.put(details.getPhone(), details);
@@ -71,7 +75,7 @@ public class AddressBook
      * @throws IllegalArgumentException If either argument is null.
      */
     public void changeDetails(String oldKey,
-                              ContactDetails details)
+                                ContactDetails details) throws NoMatchingDetailsException
     {
         if(details == null) {
             throw new IllegalArgumentException("Null details passed to changeDetails.");
@@ -82,6 +86,8 @@ public class AddressBook
         if(keyInUse(oldKey)){
             removeDetails(oldKey);
             addDetails(details);
+        } else{
+            throw new NoMatchingDetailsException(oldKey);
         }
     }
     
@@ -162,5 +168,10 @@ public class AddressBook
             allEntries.append(details).append("\n\n");
         }
         return allEntries.toString();
+    }
+    
+    public void changeDetails(String key)
+    {
+        
     }
 }

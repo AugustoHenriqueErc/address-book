@@ -40,24 +40,13 @@ public class AddressBookTextInterface
         String command;
         do{
             command = parser.getCommand();
-            if(command.equals("add")){ 
-                add();
-            }
-            else if(command.equals("get")){
-                get();
-            }
-            else if(command.equals("list")){
-                list();
-            }
-            else if(command.equals("search")){
-                find();
-            }
-            else if(command.equals("remove")){
-                remove();
-            }
-            else if(command.equals("help")){
-                help();
-            }
+            if(command.equals("add"))add();
+            else if(command.equals("get"))get();
+            else if(command.equals("list"))list();
+            else if(command.equals("search"))find();
+            else if(command.equals("remove"))remove();
+            else if(command.equals("help"))help();
+            else if(command.equals("edit")) edit();
             else{
                 // Do nothing.
             }
@@ -99,6 +88,11 @@ public class AddressBookTextInterface
         System.out.println("Type the key of the entry.");
         String key = parser.readLine();
         book.removeDetails(key);
+        try {
+            book.removeDetails(key);
+        } catch(NoMachingDetailsException e) {
+            System.out.println("There is no key matching in the address book");
+        }
     }
     
     /**
@@ -129,5 +123,19 @@ public class AddressBookTextInterface
     private void list()
     {
         System.out.println(book.listDetails());
+    }
+    
+    public void edit()
+    {
+        System.out.println("Digite a chave");
+        String chave = parser.readLine();
+        ContactDetails detalhes = book.getDetails(chave);
+        System.out.println("Novo nome ["+ detalhes.getName()+ "]: ");
+        String novoName = parser.readLine();
+        System.out.println("Novo telefone ["+ detalhes.getPhone()+ "]: ");
+        String novoTelefone = parser.readLine();
+        System.out.println("Novo endereço ["+ detalhes.getAddress()+ "]: ");
+        String novoEndereço = parser.readLine();
+        
     }
 }
