@@ -66,7 +66,14 @@ public class AddressBookTextInterface
         String phone = parser.readLine();
         System.out.print("Address: ");
         String address = parser.readLine();
-        book.addDetails(new ContactDetails(name, phone, address));
+        try
+        {
+            book.addDetails(new ContactDetails(name, phone, address));
+        }
+        catch (DuplicateKeyException dke)
+        {
+            dke.printStackTrace();
+        }
     }
     
     /**
@@ -87,10 +94,17 @@ public class AddressBookTextInterface
     {
         System.out.println("Type the key of the entry.");
         String key = parser.readLine();
-        book.removeDetails(key);
+        try
+        {
+            book.removeDetails(key);
+        }
+        catch (NoMatchingDetailsException nmde)
+        {
+            nmde.printStackTrace();
+        }
         try {
             book.removeDetails(key);
-        } catch(NoMachingDetailsException e) {
+        } catch(NoMatchingDetailsException e) {
             System.out.println("There is no key matching in the address book");
         }
     }

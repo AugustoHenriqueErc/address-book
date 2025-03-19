@@ -30,7 +30,14 @@ public class AddressBookDemo
         };
         book = new AddressBook();
         for(ContactDetails details : sampleDetails) {
-            book.addDetails(details);
+            try
+            {
+                book.addDetails(details);
+            }
+            catch (DuplicateKeyException dke)
+            {
+                dke.printStackTrace();
+            }
         }
         interaction = new AddressBookTextInterface(book);
     }

@@ -1,3 +1,6 @@
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -5,6 +8,7 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.Collection;
 
 /**
  * A class to maintain an arbitrary number of contact details.
@@ -55,12 +59,11 @@ public class AddressBook
      */
     public void addDetails(ContactDetails details) throws DuplicateKeyException
     {
-        DuplicateKeyException e = new Exception;
         if(details == null) {
             throw new IllegalArgumentException("Null details passed to addDetails.");
         }
         else if(book.containsKey(details.getName())) {
-            throw DuplicateKeyException(details.getName());
+            throw new DuplicateKeyException();
         }
         book.put(details.getName(), details);
         book.put(details.getPhone(), details);
@@ -85,7 +88,14 @@ public class AddressBook
         }
         if(keyInUse(oldKey)){
             removeDetails(oldKey);
-            addDetails(details);
+            try
+            {
+                addDetails(details);   
+            } 
+            catch(DuplicateKeyException dke)
+            {
+                System.out.println("Key already defined in this address book");
+            }
         } else{
             throw new NoMatchingDetailsException(oldKey);
         }
@@ -139,7 +149,7 @@ public class AddressBook
      * @param key One of the keys of the entry to be removed.
      * @throws IllegalArgumentException If the key is null.
      */
-    public void removeDetails(String key)
+    public void removeDetails(String key) throws NoMatchingDetailsException
     {
         if(key == null){
             throw new IllegalArgumentException("Null key passed to removeDetails.");
@@ -150,8 +160,11 @@ public class AddressBook
             book.remove(details.getPhone());
             numberOfEntries--;
         }
+        else
+        {
+            throw new IllegalArgumentException("Key "+key+" does not have an adress atached");
+        }
     }
-
     /**
      * Return all the contact details, sorted according
      * to the sort order of the ContactDetails class.
@@ -170,8 +183,20 @@ public class AddressBook
         return allEntries.toString();
     }
     
-    public void changeDetails(String key)
-    {
+    private void createFile(String filename)
+    {   File contacts = new File(filename);
+        FileWriter fw = new FileWriter(contacts); 
+        Collection c = book.values();
+        Iterator it = new c.iterartor();
+        /*for(ContactDetails cd: book)
+        {
+            fw.append(cd.toString());
+        }*/
         
+        while(it.hasNext())
+        {
+            
+        }
     }
+    
 }
